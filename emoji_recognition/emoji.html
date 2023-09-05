@@ -1,0 +1,139 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Emoji</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script type="text/javascript" src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+
+</head>
+
+<body onload="fetchJSON()">
+
+
+
+
+
+  <form>
+  <div class="form-group">
+    <label for="userInput">User Input Goes Here</label>
+    <input type="text" class="form-control" id="userInput" placeholder="Text is in JS function (saves repeated copy paste)">
+  </div>
+  <button type="button" class="btn btn-primary" onclick="analyseText()">Submit</button>
+</form>
+
+
+<div id="analysis">
+</div>
+
+
+
+
+
+
+
+  <script>
+
+    // global array to store information about emoji in the message
+    var emojiArr;
+
+    // emoji from JSON file
+    var emoji;
+
+
+
+    ////////////////////////////////////////////
+    //    ANALYSE THE TEXT FROM THE TEXT BOX
+    ////////////////////////////////////////////
+
+    function analyseText(){
+      const regexpUnicodeModified = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu
+      var sentence = document.getElementById('userInput').value;
+
+      // *****************************************************************
+      // *****************************************************************
+      // use this sentence to save typing every time
+      sentence = "OMG this is so cool 123 $ 💁 These are other emoji! 👌🎍😍";
+      // *****************************************************************
+      // *****************************************************************
+
+      // match to regex
+      emojiArr = sentence.match(regexpUnicodeModified);
+      //console.log(emojiArr);
+
+      // ADD TO HMTL - get div
+      var div = document.getElementById('analysis');
+      div.innerHTML="";
+
+      // check if emoji at start of sentence
+      if(sentence[0].match(regexpUnicodeModified)){
+        div.innerHTML += '<p>There <b>IS</b> an emoji at the start of the text</p>';
+      }
+      else{
+        div.innerHTML += '<p>There <b>is NOT</b> an emoji at the start of the text</p>';
+      }
+
+
+      // for every emoji in message ...
+      // get details from the emoji array (filled from JSON file contents)
+      // these details will be used later
+
+      for(var j=0; j<emojiArr.length; j++){
+
+        // go through all emoji in json
+        for (var k=0; k<emoji.length; k++){
+
+          let jsonData = emoji[k];
+          let display = jsonData["char"];
+
+          if(emojiArr[j]==display){
+            let name = jsonData["name"];
+            let code = jsonData["codes"];
+            //console.log(display + ' ' + code + ' ' + name);
+            emojiArr[j] = {"display":display, "name":name, "code":code};
+            console.log(emojiArr[j]);
+          }
+
+        }
+
+      }
+
+
+      // emoji count
+      div.innerHTML += '<p>There are ' + emojiArr.length + ' emoji.</p>';
+
+      // add list of emoji
+      div.innerHTML += '<ul>';
+      for(var i=0; i<emojiArr.length; i++){
+        div.innerHTML += '<li>' + emojiArr[i]["display"] + ' - ' + emojiArr[i]["code"] + ' - ' + emojiArr[i]["name"] + '</li>';
+      }
+      div.innerHTML += '</ul>';
+
+
+
+    } // END OF ANALYSE TEXT
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //    GET JSON
+    //    async returns promise, search within it and update emojiArr (global var)
+    //////////////////////////////////////////////////////////////////////////////////
+
+    async function fetchJSON() {
+      const response = await fetch('https://unpkg.com/emoji.json@14.0.0/emoji.json');
+      emoji = await response.json();
+      // waits until the request completes...
+      console.log(emoji, emoji[200]);
+      console.log("async finished");
+    }
+
+
+
+  </script>
+
+
+
+
+</body>
+</html>

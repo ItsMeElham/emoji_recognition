@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Recognition</title>
+    <link rel="stylesheet" href="emoji_recognition.css">
+
+</head>
+<body>
+    <h1>Emoji Recognition and Text Narration</h1>
+    
+    <div id="emojiRecognition">
+        <div class="input-container">
+            <input type="text" id="textInput" placeholder="Type here...">
+        </div>
+
+        <div class="button-container">
+            <button class="button" id="doneButton">Done</button>
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="autoNarrateToggle">
+                    <span class="slider round"></span>
+                </label>
+                <label for="autoNarrateToggle">Auto Narrate</label>
+            </div>
+        </div>
+
+
+        <div id="details" style="display: none;">
+            <p>Total emojis: <span id="totalEmojis">0</span></p>
+            <p>Emojis at the start: <span id="emojisAtStart">No</span></p>
+            <p>Emojis at the end: <span id="emojisAtEnd">No</span></p>
+            <div id="emojiList">
+                <h2>Entered Emojis:</h2>
+                <ul id="emojiListItems"></ul>
+            </div>
+        </div>
+
+    </div>
+</body>
+    <script src="emoji_recognition.js"></script>
+</html>
